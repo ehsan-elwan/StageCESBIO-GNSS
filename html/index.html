@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Glori</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <!-- jQuery -->
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://rawgit.com/FortAwesome/Font-Awesome/master/css/font-awesome.min.css"
+          type="text/css"/>
+
+    <!-- OL3 -->
+    <link rel="stylesheet" href="/style/ol.css"/>
+    <link rel="stylesheet" href="/style/bootstrap.min.css">
+    <link rel="stylesheet" href="/style/overlaycontrol.css"/>
+    <link rel="stylesheet" href="/style/jquery-ui.css">
+    <link rel="stylesheet" href="/style/jquery.datetimepicker.css">
+    <link rel="stylesheet" href="/style/style.css"/>
+    <link rel="stylesheet" href="/style/layerswitchercontrol.css"/>
+    <link rel="stylesheet" href="/style/bootstrap-toggle.min.css"/>
+
+    <script type="text/javascript" src="/JsPlugs/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="/JsPlugs/ol.js"></script>
+    <script type="text/javascript" src="/JsPlugs/buttoncontrol.js"></script>
+    <script type="text/javascript" src="/JsPlugs/togglecontrol.js"></script>
+    <script type="text/javascript" src="/JsPlugs/overlaycontrol.js"></script>
+    <script src="/JsPlugs/bootstrap.min.js"></script>
+    <script src="/JsPlugs/jquery-ui.min.js"></script>
+    <script src="/JsPlugs/layerswitchercontrol.js"></script>
+    <script src="/JsPlugs/jquery.datetimepicker.full.min.js"></script>
+    <script src="/JsPlugs/bootstrap-toggle.min.js"></script>
+    <script src="/JsPlugs/jquery.form.js"></script>
+
+
+</head>
+<body>
+
+<!-- DIV pour la carte -->
+<div id="fullscreen" class="fullscreen">
+    <div id="map" class="map">
+        <div id="popup"></div>
+    </div>
+
+
+    <div class="options">
+    </div>
+
+    <!-- Content of the menu -->
+    <div id="menu">
+
+        <div class="sidepanel">
+
+            <div class="bootstrap-isoA">
+                <h1>Mode A</h1>
+
+                <div class="checkbox">
+                    <label id="tglab">
+                        <input checked data-toggle="toggle" data-width="100" data-on="<i class='fa fa-play'></i> Online"
+                               data-off="<i class='fa fa-pause'></i> Offline" type="checkbox" id="toggle-one">
+
+                        Go online
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label id="tgfit">
+                        <input checked data-toggle="toggle" data-width="50" type="checkbox" id="toggle-fit">
+                        Follow Obs
+                    </label>
+                </div>
+                <div class="data"></div>
+
+            </div>
+            <div class="spliter">
+                <hr>
+            </div>
+
+
+            <div class="bootstrap-isoB">
+                <h1>Mode B</h1>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-10 col-sm-6 col-xs-12">
+                            <div class="formden_header">
+                                <h2>
+                                    Observer information's:
+                                </h2>
+
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <form action="python.php" method="post" enctype="multipart/form-data"
+                                          id="MyUploadForm" target="pyscript">
+                                        <input type="file" name="FileInput" id="FileInput">
+                                        <input type="submit" id="submit-btn" value="Upload Json" name="submit-btn">
+                                        <button class="btn btn-primary " type="button" id="get_file" value="Grab file">
+                                            Grab GeoJson file
+                                        </button>
+                                    </form>
+
+
+                                </div>
+                            </div>
+
+                            <form action="#" target="pyscript" method="get">
+                                <div class="form-group ">
+                                    <input class="form-control" id="datepicker" name="ddate" placeholder="Pick a date"
+                                           type="text"/>
+                                    <span class="help-block" id="hint_name">
+									Veuillez choisir une date
+									</span>
+                                </div>
+                                <div class="form-group ">
+                                    <input class="form-control" id="rx_lat" name="rx_lat" placeholder="Rx Lat"
+                                           type="text"/>
+                                    <span class="help-block" id="hint_name">
+									ex:43.561
+									</span>
+                                </div>
+                                <div class="form-group ">
+                                    <input class="form-control" id="rx_lon" name="rx_lon" placeholder="Rx Lon"
+                                           type="text"/>
+                                    <span class="help-block" id="hint_name">
+									ex:1.453
+									</span>
+                                </div>
+                                <div class="form-group ">
+                                    <input class="form-control" id="rx_alt" name="rx_alt" placeholder="Rx Alt"
+                                           type="text"/>
+                                    <span class="help-block" id="hint_name">
+									ex:220
+									</span>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <button class="btn btn-primary " id="python" name="submit" type="button">
+
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="myposition"></div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+
+
+	document.getElementById('python').onclick = function() {
+		var lat = $("#rx_lat").val();
+		var lon = $("#rx_lon").val();
+		var alt = $("#rx_alt").val();
+		var ddate = $("#datepicker").val();datepicker
+		$.ajax({
+				type: "POST",
+				url: "/Spec_interface/python/main.py",
+				data: { rx_lat: lat,
+					rx_lon: lon,
+					rx_alt: alt,
+				rx_date: ddate},
+				success: function(){
+					console.log("called");
+				},
+
+		}).done(function(){
+			console.log("done, updating");
+			//updatemapOffline();
+			updateSpecPointslayer();
+			updateObslayer();
+			updateEllipselayer();
+		});
+	};
+
+
+	$(document).ready(function() {
+var options = {
+       // target element(s) to be updated with server response
+    //beforeSubmit:  beforeSubmit,  // pre-submit callback
+    success:       function(){
+			console.log('done, updating..');
+			updatemapOffline();
+		},  // post-submit callback
+    //uploadProgress: OnProgress, //upload progress callback
+    resetForm: true        // reset the form after successful submit
+};
+
+ $('#MyUploadForm').submit(function() {
+    $(this).ajaxSubmit(options);
+    return false;
+});
+});
+
+
+function toggleOnByInput() {
+	$('#toggle-one').prop('checked', true).change()
+};
+
+$(function() {
+	$('#toggle-one').bootstrapToggle();
+});
+$(function() {
+	$('#toggle-fit').bootstrapToggle();
+});
+
+function callback() {
+	console.log("success call");
+}
+function postData(srptorun) {
+		$.ajax({
+				type: "POST",
+				url: srptorun,
+				//data: { param: input },
+				success: callback
+		});
+}
+
+var refreshIntervalId;
+var to_fit=false;
+
+$(function() {
+	 $('#toggle-fit').click(function() {
+		 if ($('#toggle-fit').prop('checked')) {
+			 to_fit=true;
+		 } else {
+			 to_fit=false;
+		 }
+		 console.log(to_fit);
+	 });
+ });
+
+$(function() {
+	 $('#toggle-one').click(function() {
+		 console.log("clicked");
+		 if ($('#toggle-one').prop('checked')) {
+			 // run  pyscript
+			 postData("/Spec_interface/python/Serialreader_start.py");
+			 console.log('called');
+			  refreshIntervalId = setInterval(function(){
+					console.log("Interval has been set");
+					//update
+					updatemapOffline();
+					if (! $('#toggle-one').prop('checked')) {
+						//stop pyscript;
+						postData("/Spec_interface/python/Serialreader_stop.py");
+						clearInterval(refreshIntervalId);
+						console.log('interval cleared');
+					}
+				}, 1000);
+		 }
+	 });
+ });
+		 //if (! $('#toggle-one').prop('checked')) {
+		 //console.log(('Toggle: ' + $(this).prop('checked')));
+		 //$('#tglab').innerHTML=('Toggle: ' + $(this).prop('checked'));
+
+	function datepickerMaker(){
+	  $('#datepicker').datetimepicker({
+	    lang:'fr',
+	    step:15
+	  });
+	}
+
+	function loadposition(evt) {
+	  var cords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+	  console.log(cords);
+
+	  document.getElementById("rx_lat").value = cords[1];
+	  document.getElementById("rx_lon").value = cords[0];
+
+	};
+////
+
+;
+
+////
+
+	function LayersMaker(jsonfile) {
+		var titlename = jsonfile.substr(jsonfile.lastIndexOf('/')+1, jsonfile.lastIndexOf('.'));
+	  var vectorLayer = new ol.layer.Vector({
+				name: titlename,
+	      source: new ol.source.Vector({
+	          format: new ol.format.GeoJSON()//,
+	          //url: jsonfile
+	      }),
+	      style: styleFunction,
+				strategy: ol.loadingstrategy.bbox
+	  });
+	  return vectorLayer;
+	};
+
+
+
+	function ObsMaker(evt) {
+	  var cords =evt.coordinate;
+		var ObsFeature = new ol.Feature({
+					 geometry: new ol.geom.Point(cords),
+					 name: "Obs 1",
+					// altitude: document.getElementById("rx_alt").value,
+					 rx: "true"
+
+		 });
+	  var ObsStyle = new ol.style.Style({
+
+	      image: new ol.style.Icon(({
+	        anchor: [0.7, 32],
+	        anchorXUnits: 'fraction',
+	        anchorYUnits: 'pixels',
+	        opacity: 0.75,
+	        src: '/images/Obs.png'
+	     }))
+	  });
+		ObsFeature.setStyle(ObsStyle);
+		Obslayer.getSource.addFeature(ObsFeature);
+
+	};
+
+	function removeTOCLayer() {
+	  map.eachLayer(function (layer) {
+	    map.removeLayer(layer)
+	});
+	};
+
+var Obslayer;
+var SpecPointslayer;
+var Ellipselayer;
+var map;
+
+
+	function Init(){
+	  datepickerMaker();
+
+	  var view = new ol.View({
+	    center: ol.proj.transform([1.476, 43.562], 'EPSG:4326', 'EPSG:3857'),
+	    zoom: 7,
+	    rotation: 0
+	  });
+
+	  var OSMlayer = new ol.layer.Tile({
+	    title: "OSM",
+			baseLayer: true,
+	    source: new ol.source.OSM({
+	            url: 'hot/{z}/{x}/{y}.png'
+	            })
+	  });
+
+
+	  Obslayer = LayersMaker('Spec_interface/GeoJson/Obslayer.json');
+
+	  SpecPointslayer = LayersMaker('Spec_interface/GeoJson/SpecPointslayer.json');
+
+	  Ellipselayer = LayersMaker('Spec_interface/GeoJson/Ellipselayer.json');
+
+		var baseLayers = new ol.layer.Group(
+		{   title: 'Base Layers',
+			openInLayerSwitcher: true,
+			layers:
+			[	new ol.layer.Tile(
+				{	title: "Watercolor",
+					baseLayer: true,
+					source: new ol.source.Stamen({
+					layer: 'watercolor'
+				  })
+				}),
+				new ol.layer.Tile(
+				{	title: "Toner",
+					baseLayer: true,
+					visible: false,
+					source: new ol.source.Stamen({
+					layer: 'toner'
+				  })
+				}),
+				OSMlayer
+			]
+		});
+
+
+	  var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+	          formatConstructors: [
+	            ol.format.GPX,
+	            ol.format.GeoJSON,
+	            ol.format.IGC,
+	            ol.format.KML,
+	            ol.format.TopoJSON
+	          ]
+	        });
+
+
+					var scaleLineControl = new ol.control.ScaleLine();
+
+	   map = new ol.Map({
+	    interactions: ol.interaction.defaults().extend([dragAndDropInteraction]),
+	    controls: ol.control.defaults({
+	      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+	        collapsible: false
+	      })
+	    }).extend([new ol.control.LayerSwitcher(),
+	      new ol.control.FullScreen({
+	        source: 'fullscreen'
+	      }),
+				scaleLineControl
+	    ]),
+	    layers: [
+	      baseLayers, Obslayer,  Ellipselayer, SpecPointslayer
+	    ],
+	    target: 'map',
+	    view: view
+	  });
+
+		var menu = new ol.control.Overlay ({ closeBox : true, className: "slide-right menu", content: $("#menu") });
+		map.addControl(menu);
+
+		// A toggle control to show/hide the menu
+		var t = new ol.control.Toggle(
+				{	html: '<i class="fa fa-bars" ></i>',
+					className: "menu",
+					title: "Menu",
+					onToggle: function() { menu.toggle(); }
+				});
+		map.addControl(t);
+
+		var select = new ol.interaction.Select({});
+		map.addInteraction(select);
+
+		select.getFeatures().on('add', function(e)
+		{	var feature = e.element;
+			var isObs=false;
+			var src;
+			if (feature.get('description')=="Obs") {
+				isObs=true;
+			}
+
+			coords = ol.proj.transform(feature.getGeometry().getCoordinates(), 'EPSG:3857', 'EPSG:4326');
+			if (isObs) {
+				"/images/Obs.png";
+			} else {
+				src="/images/SpecPoint.png";
+			}
+			var img = $("<img>").attr("src",src );
+			var prn = $("<div>").append( $("<p>").text("PRN: "+feature.get('name')));
+			var az = $("<div>").append( $("<p>").text("AZ: "+feature.get('az').toFixed(2)));
+			var el = $("<div>").append( $("<p>").text("EL: "+coords[2].toFixed(1)));
+			var dem = $("<div>").append( $("<p>").text("Spec dem: "+feature.get('description')));
+			var lon = $("<div>").append( $("<p>").text("Lon: "+coords[0].toFixed(3)));
+			var lat = $("<div>").append( $("<p>").text("Lat: "+coords[1].toFixed(3)));
+			var content = $("<div>")
+					.append( img )
+
+					.append(prn)
+					.append(az)
+					.append(el)
+					.append(dem)
+					.append(lon)
+					.append(lat);
+			$(".data").html(content);
+
+		});
+		select.getFeatures().on('remove', function(e)
+		{	$(".data").html("");
+		});
+
+	  var mousePosition = new ol.control.MousePosition({
+	    coordinateFormat: ol.coordinate.createStringXY(4),
+	    projection: 'EPSG:4326',
+	    target: document.getElementById('myposition'),
+	    undefinedHTML: '&nbsp;'
+	  });
+
+	  map.addControl(mousePosition);
+
+	/// PopUp's:
+	  var element = document.getElementById('popup');
+	  var popup = new ol.Overlay({
+	    element: element,
+	    positioning: 'bottom-center',
+	    stopEvent: false,
+
+	  });
+
+	  map.addOverlay(popup);
+
+	// Events:
+	  var cursorHoverStyle = "pointer";
+	  var target = map.getTarget();
+	  var jTarget = typeof target === "string" ? $("#"+target) : $(target);
+
+	  map.on("pointermove", function (event) {
+	      var mouseCoordInMapPixels = [event.originalEvent.offsetX, event.originalEvent.offsetY];
+
+	      //detect feature at mouse coords
+	      var hit = map.forEachFeatureAtPixel(mouseCoordInMapPixels, function (feature, layer) {
+	          return true;
+	      });
+
+	      if (hit) {
+	          jTarget.css("cursor", cursorHoverStyle);
+	      } else {
+	          jTarget.css("cursor", "");
+	      }
+	  });
+
+	  map.on('singleclick', function(evt) {
+
+	    var feature = map.forEachFeatureAtPixel(evt.pixel,
+	        function(feature, layer) {
+	          return feature;
+	        });
+	        if (feature && feature.getGeometry().getType() == 'Point') {
+	          var geometry = feature.getGeometry();
+	          var coord = geometry.getCoordinates();
+
+
+	          coords = ol.proj.transform(coord, 'EPSG:3857', 'EPSG:4326');
+	          popup.setPosition(evt.coordinate);
+
+	            $(element).attr('data-placement', 'top');
+	            $(element).attr('data-html', true);
+	            if (feature.get('description')=="Obs") {
+	              $(element).attr('data-content', "<p><strong>"+feature.get('description')+": <br /> </strong><hr>Lat:"+coords[1].toFixed(2)+"<br />Lon:"+coords[0].toFixed(2)+" </p>"+"<br />Alt:"+coords[2].toFixed(2)+" </p>");
+	            } else {
+	            $(element).attr('data-content', "<p><strong> PRN-ID :"+feature.get('name')+"<br />EL:"+coords[2].toFixed(0)+" /Deg"+"<br />AZ:"+feature.get('az').toFixed(0)+"/Deg"+"<br />dem:"+feature.get('description')+" /m"+"</strong><hr>Lat:"+coords[1].toFixed(4)+"<br />Lon:"+coords[0].toFixed(4)+" </p>");
+	          }
+	          $(element).popover('show');
+
+	        } else {
+	          loadposition(evt);
+	          //ObsMaker(evt);
+	          $(element).popover('destroy');
+	        }
+	  });
+
+
+
+	  document.getElementById('get_file').onclick = function() {
+	    console.log("browsered");
+	      document.getElementById('FileInput').click();
+	  };
+
+	$('input[type=file]').change(function (e) {
+	  console.log("submited");
+
+	  document.getElementById('submit-btn').click();
+	});
+
+
+	       dragAndDropInteraction.on('addfeatures', function(event) {
+	               var dragSource = new ol.source.Vector({
+	                 features: event.features
+	               });
+
+	               map.addLayer(new ol.layer.Vector({
+	                 source: dragSource,
+	                 style: styleFunction
+	               }));
+	               map.getView().fit(dragSource.getExtent());
+	             //  var jsonfeatures = dragSource.getFeatures();
+	            //   jsonfeatures.forEach(function(feature) {
+	               //     });
+	             });
+
+	};
+
+	var image = new ol.style.Circle({
+	        radius: 5,
+	        fill: null,
+	        stroke: new ol.style.Stroke({color: 'red', width: 1})
+	      });
+	var Obsimage = new ol.style.Circle({
+	        radius: 5,
+	        fill: new ol.style.Fill({
+						color: 'magenta'
+					}),
+	        stroke: new ol.style.Stroke({color: 'black', width: 1})
+	      });
+
+	var styles = {
+	        'Point': new ol.style.Style({
+	          image: image//new ol.style.Icon(({
+	            //  anchor: [0.5, 40],
+	            //  anchorXUnits: 'fraction',
+	            //  anchorYUnits: 'pixels',
+	            //  rotateWithView: (3 < 0.9) ? true : false,
+	            //  src: '/images/SpecPoint.png'
+	          //}))
+	        }),
+	        'LineString': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: 'blue',
+	            width: 1.5,
+	            lineDash: [4, 8] //or other combinations
+	          }),
+	          zIndex: 2
+	        }),
+	        'MultiLineString': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: 'green',
+	            width: 1
+	          })
+	        }),
+	        'MultiPoint': new ol.style.Style({
+	          image: image
+	        }),
+	        'MultiPolygon': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: 'yellow',
+	            width: 1
+	          }),
+	          fill: new ol.style.Fill({
+	            color: 'rgba(255, 255, 0, 0.1)'
+	          })
+	        }),
+	        'Polygon': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: 'green',
+	            //lineDash: [4],
+	            width: 2
+	          }),
+	          fill: new ol.style.Fill({
+	            color: 'rgba(255, 255, 255, 0.5)'
+	          })
+	        }),
+	        'GeometryCollection': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: 'magenta',
+	            width: 2
+	          }),
+	          fill: new ol.style.Fill({
+	            color: 'magenta'
+	          }),
+	          image: new ol.style.Circle({
+	            radius: 10,
+	            fill: null,
+	            stroke: new ol.style.Stroke({
+	              color: 'magenta'
+	            })
+	          })
+	        }),
+	        'Circle': new ol.style.Style({
+	          stroke: new ol.style.Stroke({
+	            color: 'red',
+	            width: 2
+	          }),
+	          fill: new ol.style.Fill({
+	            color: 'rgba(255,0,0,0.2)'
+	          })
+	        }),
+					'Obs': new ol.style.Style({
+	          image: Obsimage
+	        })
+	      };
+
+
+	  var styleFunction = function(feature) {
+			if (feature.get('description')== "Obs") {
+				return styles["Obs"];
+
+			} else {
+	        return styles[feature.getGeometry().getType()];
+				}
+	        };
+
+Init();
+
+
+function fit_to_src(src_to_fit){
+	src_to_fit.once('change', function(evt){
+	if (src_to_fit.getState() === 'ready') {
+		// now the source is fully loaded
+		if (src_to_fit.getFeatures().length > 0) {
+			map.getView().fit(src_to_fit.getExtent(), map.getSize());
+		}
+	}
+});
+}
+
+function updateSpecPointslayer(){
+	var format = new ol.format.GeoJSON();
+	$.ajax({
+			url: '/Spec_interface/GeoJson/SpecPointslayer.json',
+			type: 'POST',
+			dataType: 'json',
+	}).done(function(response){
+		SpecPointslayer.getSource().addFeatures( format.readFeatures( response, {
+	featureProjection: 'EPSG:3857'
+	} ) );
+	});
+};
+function updateEllipselayer(){
+	var format = new ol.format.GeoJSON();
+	$.ajax({
+			url: '/Spec_interface/GeoJson/Ellipselayer.json',
+			type: 'POST',
+			dataType: 'json',
+	}).done(function(response){
+		Ellipselayer.getSource().addFeatures( format.readFeatures( response, {
+	featureProjection: 'EPSG:3857'
+	} ) );
+	});
+};
+function updateObslayer(){
+	var format = new ol.format.GeoJSON();
+	$.ajax({
+			url: '/Spec_interface/GeoJson/Obslayer.json',
+			type: 'POST',
+			dataType: 'json',
+	}).done(function(response){
+		Obslayer.getSource().addFeatures( format.readFeatures( response, {
+	featureProjection: 'EPSG:3857'
+	} ) );
+	});
+};
+
+
+function updatemapOffline() {
+	console.log('updating');
+	var ObsSrc=new ol.source.Vector({
+			format: new ol.format.GeoJSON(),
+			url: "/Spec_interface/GeoJson/Obslayer.json"
+	});
+	var SpecPointsSrc=new ol.source.Vector({
+			format: new ol.format.GeoJSON(),
+			url: "/Spec_interface/GeoJson/SpecPointslayer.json"
+	});
+	var EllipseSrc=new ol.source.Vector({
+			format: new ol.format.GeoJSON(),
+			url: "/Spec_interface/GeoJson/Ellipselayer.json"
+	});
+	//console.log(ObsSrc.getFeatures.length);
+
+	Obslayer.setSource(ObsSrc);
+	SpecPointslayer.setSource(SpecPointsSrc);
+	Ellipselayer.setSource(EllipseSrc);
+	if (to_fit){
+		fit_to_src(EllipseSrc);
+	}
+
+
+	//map.getView().fit(ObsSrc.getExtent(), map.getSize());
+
+}
+//window.setInterval(updatemapOffline,1000);
+
+
+</script>
+</body>
+</html>

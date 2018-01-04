@@ -1,0 +1,227 @@
+body
+{	font-family: 'Lucida Grande',Verdana,Geneva,Lucida,Arial,Helvetica,sans-serif;
+
+}
+a, i, b
+{	color: #337ab7;
+	text-decoration: none;
+}
+a:hover
+{	text-decoration: underline;
+}
+a.title
+{	text-decoration: none;
+}
+h1
+{	 url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACE1BMVEX///8A//8AgICA//8AVVVAQID///8rVVVJtttgv98nTmJ2xNgkW1ttyNsmWWZmzNZYxM4gWGgeU2JmzNNr0N1Rwc0eU2VXxdEhV2JqytQeVmMhVmNoydUfVGUgVGQfVGQfVmVqy9hqy9dWw9AfVWRpydVry9YhVmMgVGNUw9BrytchVWRexdGw294gVWQgVmUhVWPd4N6HoaZsy9cfVmQgVGRrytZsy9cgVWQgVWMgVWRsy9YfVWNsy9YgVWVty9YgVWVry9UgVWRsy9Zsy9UfVWRsy9YgVWVty9YgVWRty9Vsy9aM09sgVWRTws/AzM0gVWRtzNYgVWRuy9Zsy9cgVWRGcHxty9bb5ORbxdEgVWRty9bn6OZTws9mydRfxtLX3Nva5eRix9NFcXxOd4JPeINQeIMiVmVUws9Vws9Vw9BXw9BYxNBaxNBbxNBcxdJexdElWWgmWmhjyNRlx9IqXGtoipNpytVqytVryNNrytZsjZUuX210k5t1y9R2zNR3y9V4lp57zth9zdaAnKOGoaeK0NiNpquV09mesrag1tuitbmj1tuj19uktrqr2d2svcCu2d2xwMO63N+7x8nA3uDC3uDFz9DK4eHL4eLN4eIyYnDX5OM5Z3Tb397e4uDf4uHf5uXi5ePi5+Xj5+Xk5+Xm5+Xm6OY6aHXQ19fT4+NfhI1Ww89gx9Nhx9Nsy9ZWw9Dpj2abAAAAWnRSTlMAAQICAwQEBgcIDQ0ODhQZGiAiIyYpKywvNTs+QklPUlNUWWJjaGt0dnd+hIWFh4mNjZCSm6CpsbW2t7nDzNDT1dje5efr7PHy9PT29/j4+Pn5+vr8/f39/f6DPtKwAAABTklEQVR4Xr3QVWPbMBSAUTVFZmZmhhSXMjNvkhwqMzMzMzPDeD+xASvObKePPa+ffHVl8PlsnE0+qPpBuQjVJjno6pZpSKXYl7/bZyFaQxhf98hHDKEppwdWIW1frFnrxSOWHFfWesSEWC6R/P4zOFrix3TzDFLlXRTR8c0fEEJ1/itpo7SVO9Jdr1DVxZ0USyjZsEY5vZfiiAC0UoTGOrm9PZLuRl8X+Dq1HQtoFbJZbv61i+Poblh/97TC7n0neCcK0ETNUrz1/xPHf+DNAW9Ac6t8O8WH3Vp98f5lCaYKAOFZMLyHL4Y0fe319idMNgMMp+zWVSybUed/+/h7I4wRAG1W6XDy4XmjR9HnzvDRZXUAYDFOhC1S/Hh+fIXxen+eO+AKqbs+wAo30zDTDvDxKoJN88sjUzDFAvBzEUGFsnADoIvAJzoh2BZ8sner+Ke/vwECuQAAAABJRU5ErkJggg==") no-repeat scroll 10px center;
+	color: #fff;
+	font-size: 1.5em;
+	padding: 0.5em 50px;
+	margin:0;
+	background-color: #428bca;
+	border-color: #357ebd;
+}
+h2
+{	color: #337ab7;
+	font-size:1.1em;
+	margin: 0.5em 0;
+}
+
+.info
+{	background:#f5f5f5;
+	padding:0.5em;
+	margin: 1em 0;
+}
+.info ul
+{	margin:0;
+}
+
+.ol-attribution img
+{	vertical-align:middle;
+}
+
+.layerSwitcher
+{	display:inline-block;
+	background:#cdf;
+	padding:0.5em;
+}
+
+
+.btn
+{	color:#fff;
+	background:#369;
+	padding:0.5em;
+	text-decoration:none;
+	cursor:pointer;
+	display:inline-block;
+	margin-right:0.5em;
+}
+
+.block,
+.options
+{	display: table;
+	margin: 0.5em;
+	position: relative;
+	z-index: 1;
+	margin:1em;
+}
+.options
+{	background: #def;
+	padding: 0.5em;
+}
+.options ul
+{	list-style: none;
+	padding-left: 0.5em;
+}
+
+.ol-overlay.menu
+{	width: 20%;
+	left: 80%;
+	background: #fff;
+	color: #333;
+	box-shadow: 0px 0px 5px #000;
+	padding: 0.5em;
+	-webkit-transition: all 1.00s;
+	transition: all 1.00s;
+}
+/* style the close box */
+.ol-overlay.menu .ol-closebox
+{	color: #369;
+	right: 1em;
+	top: 0.5em;
+}
+.ol-overlay.menu .ol-closebox:before
+{	content:"\f0c9";
+	font-family:FontAwesome;
+}
+#menu
+{	padding-top: 1.5em;
+	font-size: 0.9em;
+}
+/* menu button */
+.ol-control.menu
+{	top: 0.5em;
+	right: 0.5em;
+}
+.ol-control.menu i
+{	color: #fff;
+}
+.ol-zoom
+{	right: auto;
+	left: 0.5em;
+	top: 2.5em;
+}
+.ol-rotate
+{	right: 3em;
+}
+.ol-touch .ol-rotate
+{	right: 3.5em;
+}
+/**/
+.ol-overlay img
+{	max-width: 90%;
+}
+.data,
+.data p
+{	margin:0;
+	text-align: center;
+	font-size:0.9em;
+}
+
+.map {
+	width: 100%;
+	height: 100vh;
+	float: left;
+}
+
+.fullscreen:-moz-full-screen {
+	height: 100%;
+}
+.fullscreen:-webkit-full-screen {
+	height: 100%;
+}
+.fullscreen:-ms-fullscreen {
+	height: 100%;
+}
+
+.fullscreen:fullscreen {
+	height: 100%;
+
+}
+
+.fullscreen {
+	margin-bottom: 10px;
+	width: 100%;
+	height: 400px;
+
+}
+.ol-full-screen{
+	right: auto;
+		left: 0.5em;
+		top: 0.5em;
+}
+
+
+  .sidepanel {
+    background: 'white';
+    width: 100%;
+    height: 100vh;
+    float: left;
+  }
+
+
+  .sidepanel-title {
+    width: 100%;
+    font-size: 3em;
+    color: black;
+    display: block;
+    text-align: center;
+  }
+
+
+
+  .ol-mouse-position {
+    margin: auto;
+    width: 100%;
+    color: #2B2B2B;
+    padding: 10px;
+    right: auto;
+    text-align: center;
+    bottom: 0;
+    top:90vh
+  }
+
+  .help-block {
+    font-size: 10px;
+  }
+
+	#popup {
+	padding-bottom: 15px;
+}
+
+#FileInput {
+		display:none;
+}
+#submit-btn {
+		display:none;
+}
+
+.ol-scale-line {
+    background: black;
+    padding: 5px;
+  }
+
+  .bootstrap-isoB .form-group button, .bootstrap-isoB form input.form-control, .bootstrap-isoB form textarea.form-control,
+   .bootstrap-isoB form select.form-control, .bootstrap-isoB form .form-group-lg input.form-control,
+    .bootstrap-isoB form .form-group-lg textarea.form-control, .bootstrap-isoB form .form-group-lg select.form-control,
+     .bootstrap-isoB form .form-group-sm input.form-control, .bootstrap-isoB form .form-group-sm textarea.form-control,
+      .bootstrap-isoB form .form-group-sm select.form-control{-webkit-border-radius: 20px;-moz-border-radius: 20px; border-radius: 20px;}
+      .bootstrap-isoB .formden_header h2{font-size: 100%;}, .bootstrap-isoB .formden_header p,
+       .bootstrap-isoB form{font-family: Arial, Helvetica, sans-serif; color: black}.bootstrap-isoB form button,
+        .bootstrap-isoB form button:hover{color: #ffffff !important;} .asteriskField{color: red;}.bootstrap-isoB form
+        .input-group-addon {color:#555555; background-color: #eeeeee; border-radius: 20px; padding-left:15px}
+				.btn-primary {
+				color: #fff;
+				background-color: #428bca;
+				border-color: #357ebd;
+				}
